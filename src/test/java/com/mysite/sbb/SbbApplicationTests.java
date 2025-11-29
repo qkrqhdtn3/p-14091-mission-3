@@ -88,17 +88,25 @@ class SbbApplicationTests {
 //        this.questionRepository.delete(q);
 //        assertEquals(1, this.questionRepository.count());
 //    }
+//
+//    @Test
+//    void testJpa9(){
+//        Optional<Question> oq = this.questionRepository.findById(2);
+//        assertTrue(oq.isPresent());
+//        Question q = oq.get();
+//
+//        Answer a = new Answer();
+//        a.setContent("네");
+//        a.setQuestion(q);
+//        a.setCreateDate(LocalDateTime.now());
+//        this.answerRepository.save(a);
+//    }
 
     @Test
-    void testJpa9(){
-        Optional<Question> oq = this.questionRepository.findById(2);
-        assertTrue(oq.isPresent());
-        Question q = oq.get();
-
-        Answer a = new Answer();
-        a.setContent("네");
-        a.setQuestion(q);
-        a.setCreateDate(LocalDateTime.now());
-        this.answerRepository.save(a);
+    void testJpa10(){
+        Optional<Answer> oa = this.answerRepository.findById(1);
+        assertTrue(oa.isPresent());
+        Answer a = oa.get();
+        assertEquals(2, a.getQuestion().getId());
     }
 }
