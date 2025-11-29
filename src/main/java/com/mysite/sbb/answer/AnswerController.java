@@ -5,10 +5,7 @@ import com.mysite.sbb.question.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/answer")
 @RequiredArgsConstructor
@@ -16,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class AnswerController {
     private final QuestionService questionService;
 
-    @GetMapping("/create/{id}")
+    @PostMapping("/create/{id}")
     public String createAnswer(Model model,
                                @PathVariable Integer id,
                                @RequestParam(value="content") String content){
