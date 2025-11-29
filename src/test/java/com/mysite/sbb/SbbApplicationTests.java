@@ -37,13 +37,19 @@ class SbbApplicationTests {
 //        Question q = all.get(0);
 //        assertEquals("sbb가 무엇인가요", q.getSubject());
 //    }
+//
+//    @Test
+//    void testJpa3(){
+//        Optional<Question> oq = this.questionRepository.findById(1);
+//        if(oq.isPresent()){
+//            Question q = oq.get();
+//            assertEquals("sbb가 무엇인가요", q.getSubject());
+//        }
+//    }
 
     @Test
-    void testJpa3(){
-        Optional<Question> oq = this.questionRepository.findById(1);
-        if(oq.isPresent()){
-            Question q = oq.get();
-            assertEquals("sbb가 무엇인가요", q.getSubject());
-        }
+    void testJpa4() {
+        Question q = this.questionRepository.findBySubject("sbtatb가 무엇인가요");
+        assertEquals(1, q.getId());
     }
 }
