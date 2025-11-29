@@ -1,0 +1,36 @@
+git add .;
+git commit -m "feat: add / endpoint to redirect to /question/list";
+git push origin main
+
+git commit --allow-empty -m "2-09 start"
+
+feat: add / endpoint to redirect to /question/list
+fix: correct tag and correct syntax in question_list template
+feat : add question list table to question_list template
+fix: add missing semicolon in QuestionController
+feat: fetch questions from repository and add to model
+feat: fetch Questions from QuestionRepository and add questions to model in /question/list
+feat: Update /question/list endpoint to render question_html template
+feat: Add question_list.html template
+feat: add AnswerRepository
+feat: add OneToMany at Question entity
+feat: add junit dependency
+git add src/test/java/com/mysite/sbb/
+feat: add path
+chore: move test files to new package
+test: add questionRepository save test
+test: add QuestionRepository findAll tests
+chore : remove junit jupiter dependency from build.gradle.kts
+test: add QuestionRepository findById tests
+feat: add findBySubject method at QuestionRepository
+chore: enable sql logging in application.yml
+feat: add findBySubjectAndContent method to QuestionRepository
+test: add tests for findBySubjectAndContent method of QuestionRepository to feat: add findBySubjectLike method to QuestionRepository
+test: add tests for findBySubjectLike method
+test: add tests for updating question entity
+test: add tests for deleting Question entity in repository
+test: Add tests for saving Answer entity
+chore: Add missing @Test annotation to test file
+test: Add tests for finding answer entity
+test: Add tests for finding Answer entities via Question entity
+feat: add /question/list endpoint at QuestionController
