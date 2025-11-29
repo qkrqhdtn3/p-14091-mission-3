@@ -1,1 +1,14 @@
-<h2>Hello Template</h2>
+<table>
+    <thead>
+        <tr>
+            <th>제목</th>
+            <ht>작성일시</ht>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="question : ${questionList">
+            <td th:text="${question.subject}"></td>
+            <td th:text="${question.createDate}"></td>
+        </tr>
+    </tbody>
+</table>
