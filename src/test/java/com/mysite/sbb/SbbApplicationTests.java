@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -113,17 +114,31 @@ class SbbApplicationTests {
 //        Answer a = oa.get();
 //        assertEquals(2, a.getQuestion().getId());
 //    }
+//
+//    @Transactional
+//    @Test
+//    void testJpa11(){
+//        Optional<Question> oq = this.questionRepository.findById(2);
+//        assertTrue(oq.isPresent());
+//        Question q = oq.get();
+//
+//        List<Answer> answerList = q.getAnswerList();
+//
+//        assertEquals(1, answerList.size());
+//        assertEquals("네", answerList.get(0).getContent());
+//    }
 
-    @Transactional
     @Test
-    void testJpa11(){
-        Optional<Question> oq = this.questionRepository.findById(2);
-        assertTrue(oq.isPresent());
-        Question q = oq.get();
-
-        List<Answer> answerList = q.getAnswerList();
-
-        assertEquals(1, answerList.size());
-        assertEquals("네", answerList.get(0).getContent());
+    void testJpa(){
+        for(int i = 1 ; i <= 300 ; i++){
+            Question question = new Question();
+            String subject = String.format("테스트 데이터 : [%03d]", i);
+            String content = String.format("내용 없음 : [%03d]", i);
+            LocalDateTime createDate = LocalDateTime.now();
+            question.setSubject(subject);
+            question.setContent(content);
+            question.setCreateDate(createDate);
+            this.questionRepository.save(question);
+        }
     }
 }
