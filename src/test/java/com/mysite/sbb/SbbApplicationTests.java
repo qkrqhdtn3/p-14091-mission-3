@@ -138,6 +138,7 @@ class SbbApplicationTests {
             question.setSubject(subject);
             question.setContent(content);
             question.setCreateDate(createDate);
+            question.setAuthor(null);
             this.questionRepository.save(question);
         }
     }
