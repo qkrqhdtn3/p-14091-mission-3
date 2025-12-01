@@ -1,9 +1,10 @@
 git add .;
-git commit -m "feat: add search functionality in QuestionRepository";
+git commit -m "feat: add question search functionality in service and controller";
 git push origin main
 
 git commit --allow-empty -m "3-13 start"
 
+feat: add question search functionality in service and controller
 feat: add search functionality in QuestionRepository
 feat: add search functionality to question with multiple fields
 feat: apply markdown rendering in question_detail template
