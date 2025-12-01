@@ -1,9 +1,15 @@
 git add .;
-git commit -m "feat: add question search functionality in service and controller";
+git commit -m "fix: correct typo in @Query string in repository";
 git push origin main
 
 git commit --allow-empty -m "3-13 start"
 
+fix: correct typo in @Query string in repository
+feat: add search fucntionality with @Query in repository
+feat: add search script for dynamic question search
+refactor: apply search functionality to paging in template
+feat: add serach form for question in question_list template
+feat: add search bar for question in question_list template
 feat: add question search functionality in service and controller
 feat: add search functionality in QuestionRepository
 feat: add search functionality to question with multiple fields
