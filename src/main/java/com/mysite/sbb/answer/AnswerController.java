@@ -71,6 +71,8 @@ public class AnswerController {
         return String.format("redirect:/question/detail/%s", answer.getQuestion().getId());
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/delete/{id}")
     public String answerDelete(Principal principal,
                                @PathVariable("id") Integer id){
         Answer answer = this.answerService.getAnswer(id);
