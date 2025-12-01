@@ -70,4 +70,6 @@ public class QuestionController {
         questionForm.setContent(question.getContent());
         return "question_form";
     }
+
+
 }
