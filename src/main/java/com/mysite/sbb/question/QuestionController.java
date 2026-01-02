@@ -5,6 +5,7 @@ import com.mysite.sbb.answer.AnswerForm;
 import com.mysite.sbb.answer.AnswerService;
 import com.mysite.sbb.user.SiteUser;
 import com.mysite.sbb.user.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
@@ -43,12 +44,25 @@ public class QuestionController {
     public String detail(Model model,
                          @PathVariable("id") Integer id,
                          @RequestParam(value="page", defaultValue = "0") int page,
-                         AnswerForm answerForm){
+                         AnswerForm answerForm,
+                         HttpServletRequest request){
         Question question = questionService.getQuestion(id);
         Page<Answer> paging = this.answerService.getAnswersByQuestion(question, page, 10);
+
+        if(isAjaxRequest(request)){
+            model.addAttribute("paging", paging);
+            return "fragments/answerList";
+        }
+
         model.addAttribute("question", question);
         model.addAttribute("paging", paging);
+
         return "question_detail";
+    }
+
+    private boolean isAjaxRequest(HttpServletRequest request){
+        return "XMLHttpRequest".equals(request.getHeader("X-Requested-With")) ||
+                "application/json".equals(request.getHeader("Content-Type"));
     }
 
     @PreAuthorize("isAuthenticated()")
