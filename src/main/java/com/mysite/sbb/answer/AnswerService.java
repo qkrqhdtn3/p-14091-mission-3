@@ -5,10 +5,15 @@ import com.mysite.sbb.question.Question;
 import com.mysite.sbb.user.SiteUser;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,11 +23,11 @@ public class AnswerService {
     private final AnswerRepository answerRepository;
     private final EntityManager entityManager;
 
-    public Answer create(Question questions, String content, SiteUser author){
+    public Answer create(Question question, String content, SiteUser author){
         Answer answer = new Answer();
         answer.setContent(content);
         answer.setCreateDate(LocalDateTime.now());
-        answer.setQuestion(questions);
+        answer.setQuestion(question);
         answer.setAuthor(author);
         this.answerRepository.save(answer);
         return answer;
@@ -53,6 +58,14 @@ public class AnswerService {
         else{
             throw new DataNotFoundException("answer not found");
         }
+    }
+
+    public Page<Answer> getAnswersByQuestion(Question question, int page, int size){
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createDate"));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sorts));
+
+        return this.answerRepository.findByQuestion(question, pageable);
     }
 
     public void modify(Answer answer, String content){

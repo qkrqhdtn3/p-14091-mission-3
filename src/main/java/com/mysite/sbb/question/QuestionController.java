@@ -1,6 +1,8 @@
 package com.mysite.sbb.question;
 
+import com.mysite.sbb.answer.Answer;
 import com.mysite.sbb.answer.AnswerForm;
+import com.mysite.sbb.answer.AnswerService;
 import com.mysite.sbb.user.SiteUser;
 import com.mysite.sbb.user.UserService;
 import jakarta.validation.Valid;
@@ -24,6 +26,7 @@ import java.util.List;
 public class QuestionController {
     private final QuestionService questionService;
     private final UserService userService;
+    private final AnswerService answerService;
 
     @GetMapping("/list")
     public String list(Model model,
@@ -36,9 +39,15 @@ public class QuestionController {
     }
 
     @GetMapping("/detail/{id}")
-    public String detail(Model model, @PathVariable("id") Integer id, AnswerForm answerForm){
+//    public String detail(Model model, @PathVariable("id") Integer id, AnswerForm answerForm){
+    public String detail(Model model,
+                         @PathVariable("id") Integer id,
+                         @RequestParam(value="page", defaultValue = "0") int page,
+                         AnswerForm answerForm){
         Question question = questionService.getQuestion(id);
+        Page<Answer> paging = this.answerService.getAnswersByQuestion(question, page, 10);
         model.addAttribute("question", question);
+        model.addAttribute("paging", paging);
         return "question_detail";
     }
 
