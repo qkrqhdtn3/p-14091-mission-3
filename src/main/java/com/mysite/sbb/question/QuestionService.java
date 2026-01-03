@@ -3,6 +3,7 @@ package com.mysite.sbb.question;
 import com.mysite.sbb.DataNotFoundException;
 import com.mysite.sbb.answer.Answer;
 import com.mysite.sbb.user.SiteUser;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.PredicateSpecification;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ import java.util.Optional;
 @Service
 public class QuestionService {
     private final QuestionRepository questionRepository;
+    private final EntityManager entityManager;
 
     private Specification<Question> search(String kw) {
         return new Specification<>() {
@@ -64,6 +67,23 @@ public class QuestionService {
         q.setCreateDate(LocalDateTime.now());
         q.setAuthor(siteUser);
         this.questionRepository.save(q);
+    }
+
+    @Transactional
+    public void createBatch(List<Question> questions){
+        final int batchSize = 50;
+
+        for(int i = 0 ; i < questions.size() ; i++){
+            questionRepository.save(questions.get(i));
+
+            if(i % batchSize == 0 && i > 0){
+                questionRepository.flush();
+                entityManager.clear();
+            }
+        }
+
+        questionRepository.flush();
+        entityManager.clear();
     }
 
     public Page<Question> getList(int page, String kw){
