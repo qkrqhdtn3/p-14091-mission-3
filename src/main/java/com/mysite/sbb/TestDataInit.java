@@ -86,9 +86,10 @@ public class TestDataInit {
             question.setSubject("subject%d".formatted(i));
             question.setContent("content%d".formatted(i));
             question.setAuthor(siteUsers.get(i));
-            question.setCreateDate(localDateTimeNow);
+            question.setCreateDate(localDateTimeNow.plusNanos(i * 1000L));
             questions.add(question);
         }
+        localDateTimeNow = localDateTimeNow.plusNanos(200 * 1000L);
         questionService.createBatch(questions);
 
         // 답변 생성
@@ -102,9 +103,10 @@ public class TestDataInit {
                 answer.setQuestion(question);
                 answer.setContent("content%d".formatted(index++));
                 answer.setAuthor(siteUser);
-                answer.setCreateDate(localDateTimeNow);
+                answer.setCreateDate(localDateTimeNow.plusNanos(index * 1000L));
                 answers.add(answer);
             }
+            localDateTimeNow = localDateTimeNow.plusNanos(200 * 1000L);
             answerService.createBatch(answers);
         }
     }
