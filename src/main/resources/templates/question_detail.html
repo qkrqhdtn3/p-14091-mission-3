@@ -38,40 +38,18 @@
     <h5 class="border-bottom my-3 py-2"
         th:text="|${#lists.size(question.answerList)}개의 답변이 있습니다.|"></h5>
     <!-- 답변 반복 시작 -->
-    <div class="card my-3" th:each="answer : ${question.answerList}">
-        <a th:id="|answer_${answer.id}|"></a>
-        <div class="card-body">
-            <div class="card-text" th:utext="${@commonUtil.markdown(answer.content)}"></div>
-            <div class="d-flex justify-content-end">
-                <div th:if="${answer.modifyDate != null}" class="badge bg-light text-dark p-2 text-start mx-3">
-                    <div class="mb-2">modified at</div>
-                    <div th:text="${#temporals.format(answer.modifyDate, 'yyyy-MM-dd HH:mm')}"></div>
-                </div>
-                <div class="badge bg-light text-dark p-2 text-start">
-                    <div class="mb-2">
-                        <span th:if="${answer.author != null}" th:text="${answer.author.username}"></span>
-                    </div>
-                    <div th:text="${#temporals.format(answer.createDate, 'yyyy-MM-dd HH:mm')}"></div>
-                </div>
-            </div>
-            <div class="my-3">
-                <a href="javascript:void(0);" class="recommend btn btn-sm btn-outline-secondary"
-                   th:data-uri="@{|/answer/vote/${answer.id}|}">
-                    추천
-                    <span class="badge rounded-pill bg-success" th:text="${#lists.size(answer.voter)}"></span>
-                </a>
-                <a th:href="@{|/answer/modify/${answer.id}|}" class="btn btn-sm btn-outline-secondary"
-                   sec:authorize="isAuthenticated()"
-                   th:if="${answer.author != null and #authentication.getPrincipal().getUsername() == answer.author.username}"
-                   th:text="수정"></a>
-                <a href="javascript:void(0);" th:data-uri="@{|/answer/delete/${answer.id}|}"
-                   class="delete btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
-                   th:if="${answer.author != null and #authentication.getPrincipal().getUsername() == answer.author.username}"
-                   th:text="삭제"></a>
-            </div>
-        </div>
+    <div id="answers">
+
     </div>
     <!-- 답변 반복 끝  -->
+    <!-- 페이징처리 시작 -->
+    <div id="pagination">
+
+    </div>
+    <!-- 페이징처리 끝 -->
+    <form th:action="@{|/question/detail/${question.id}|}" method="get" id="searchForm">
+        <input type="hidden" id="page" name="page" th:value="${paging.number}">
+    </form>
     <!-- 답변 작성 -->
     <form th:action="@{|/answer/create/${question.id}|}" th:object="${answerForm}" method="post" class="my-3">
         <div th:replace="~{form_errors :: formErrorsFragment}"></div>
@@ -83,20 +61,67 @@
 </div>
 <script layout:fragment="script" type='text/javascript'>
     const delete_elements = document.getElementsByClassName("delete");
-    Array.from(delete_elements).forEach(function(element) {
-        element.addEventListener('click', function() {
-            if(confirm("정말로 삭제하시겠습니까?")) {
+    Array.from(delete_elements).forEach(function (element) {
+        element.addEventListener('click', function () {
+            if (confirm("정말로 삭제하시겠습니까?")) {
                 location.href = this.dataset.uri;
-            };
+            }
+            ;
         });
     });
     const recommend_elements = document.getElementsByClassName("recommend");
-    Array.from(recommend_elements).forEach(function(element) {
-        element.addEventListener('click', function() {
-            if(confirm("정말로 추천하시겠습니까?")) {
+    Array.from(recommend_elements).forEach(function (element) {
+        element.addEventListener('click', function () {
+            if (confirm("정말로 추천하시겠습니까?")) {
                 location.href = this.dataset.uri;
-            };
+            }
+            ;
         });
     });
+
+    loadAnswers(0);
+
+    // 페이지 버튼
+    document.getElementById('pagination').addEventListener('click', function (event) {
+        const target = event.target.closest('[data-page]');
+        if (target) {
+            const page = target.dataset.page;
+            loadAnswers(page);
+        }
+        // if (event.target && event.target.classList.contains('page-link')) {
+        //     const page = event.target.dataset.page;
+        //     console.log('Page clicked: ', page);
+        //     loadAnswers(page);
+        // }
+    });
+
+    // load answer list
+    function loadAnswers(page) {
+        const questionId = [[${question.id}]];
+        const url = '/question/detail/' + questionId + '?page=' + page;
+
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(data => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(data, 'text/html');
+                document.getElementById('answers').innerHTML = doc.getElementById('answers').innerHTML;
+                document.getElementById('pagination').innerHTML = doc.getElementById('pagination').innerHTML;
+            })
+            .catch(error => {
+                console.log('AJAX 요청 실패:', error);
+            });
+    }
 </script>
 </html>
